@@ -32,8 +32,8 @@
 //     "welcome to javascript";
 // }
 
-function changeColor(){
-    document.getElementById("Background color").innerHTML=
-    "welcome to javascript";
-}
+// function changeColor(){
+//     document.getElementById("Background color").innerHTML=
+//     "welcome to javascript";
+// }
 

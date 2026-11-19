@@ -1,0 +1,295 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.7)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# \l
+                                                            List of databases
+   Name    |  Owner   | Encoding | Locale Provider |      Collate       |       Ctype        | Locale | ICU Rules |   Access privileges
+-----------+----------+----------+-----------------+--------------------+--------------------+--------+-----------+-----------------------
+ college   | postgres | UTF8     | libc            | English_India.1252 | English_India.1252 |        |           |
+ postgres  | postgres | UTF8     | libc            | English_India.1252 | English_India.1252 |        |           |
+ student   | postgres | UTF8     | libc            | English_India.1252 | English_India.1252 |        |           |
+ template0 | postgres | UTF8     | libc            | English_India.1252 | English_India.1252 |        |           | =c/postgres          +
+           |          |          |                 |                    |                    |        |           | postgres=CTc/postgres
+ template1 | postgres | UTF8     | libc            | English_India.1252 | English_India.1252 |        |           | =c/postgres          +
+           |          |          |                 |                    |                    |        |           | postgres=CTc/postgres
+(5 rows)
+
+
+postgres=# \c college
+You are now connected to database "college" as user "postgres".
+college=# CREATE TABLE college(
+college(#  id SERIAL PRIMARY KEY,
+college(# name VARCHAR(100),
+college(#  age INT,
+college(# course VARCHAR(50),
+college(# marks INT);
+ERROR:  relation "college" already exists
+college=# select * from students;
+ id |  name  | age | course | marks
+----+--------+-----+--------+-------
+  5 | Vikram |  23 | BBA    |    86
+  6 | Pooja  |  20 | BCA    |    94
+  7 | Kiran  |  22 | MCA    |    78
+  8 | Divya  |  21 | BSc    |    99
+  9 | Sanjay |  19 | BBA    |    73
+ 10 | Meena  |  23 | BCom   |    91
+  2 | Kavya  |  20 | MCA    |   104
+  4 | Ananya |  19 | BCom   |   104
+  1 | Arjun  |  22 | BCA    |    92
+  3 | Rohit  |  21 | BSc    |    96
+(10 rows)
+
+
+college=# select * from students
+college-# WHERE marks>80;
+ id |  name  | age | course | marks
+----+--------+-----+--------+-------
+  5 | Vikram |  23 | BBA    |    86
+  6 | Pooja  |  20 | BCA    |    94
+  8 | Divya  |  21 | BSc    |    99
+ 10 | Meena  |  23 | BCom   |    91
+  2 | Kavya  |  20 | MCA    |   104
+  4 | Ananya |  19 | BCom   |   104
+  1 | Arjun  |  22 | BCA    |    92
+  3 | Rohit  |  21 | BSc    |    96
+(8 rows)
+
+
+college=# select * from students
+college-# order by marks desc;
+ id |  name  | age | course | marks
+----+--------+-----+--------+-------
+  2 | Kavya  |  20 | MCA    |   104
+  4 | Ananya |  19 | BCom   |   104
+  8 | Divya  |  21 | BSc    |    99
+  3 | Rohit  |  21 | BSc    |    96
+  6 | Pooja  |  20 | BCA    |    94
+  1 | Arjun  |  22 | BCA    |    92
+ 10 | Meena  |  23 | BCom   |    91
+  5 | Vikram |  23 | BBA    |    86
+  7 | Kiran  |  22 | MCA    |    78
+  9 | Sanjay |  19 | BBA    |    73
+(10 rows)
+
+
+college=# update students
+college-# SET marks=99
+college-# where id in(1,2,3,4);
+UPDATE 4
+college=# select * from students;
+ id |  name  | age | course | marks
+----+--------+-----+--------+-------
+  5 | Vikram |  23 | BBA    |    86
+  6 | Pooja  |  20 | BCA    |    94
+  7 | Kiran  |  22 | MCA    |    78
+  8 | Divya  |  21 | BSc    |    99
+  9 | Sanjay |  19 | BBA    |    73
+ 10 | Meena  |  23 | BCom   |    91
+  1 | Arjun  |  22 | BCA    |    99
+  2 | Kavya  |  20 | MCA    |    99
+  3 | Rohit  |  21 | BSc    |    99
+  4 | Ananya |  19 | BCom   |    99
+(10 rows)
+
+
+college=# UPDATE students
+college-# SET marks=CASE
+college-# WHEN id=1 THEN 87
+college-# WHEN id=2 THEN 80
+college-# WHEN id=3 THEN 89
+college-# END
+college-# WHERE id IN (1,2,3);
+UPDATE 3
+college=# select * from students;
+ id |  name  | age | course | marks
+----+--------+-----+--------+-------
+  5 | Vikram |  23 | BBA    |    86
+  6 | Pooja  |  20 | BCA    |    94
+  7 | Kiran  |  22 | MCA    |    78
+  8 | Divya  |  21 | BSc    |    99
+  9 | Sanjay |  19 | BBA    |    73
+ 10 | Meena  |  23 | BCom   |    91
+  4 | Ananya |  19 | BCom   |    99
+  1 | Arjun  |  22 | BCA    |    87
+  2 | Kavya  |  20 | MCA    |    80
+  3 | Rohit  |  21 | BSc    |    89
+(10 rows)
+
+
+college=# UPDATE students
+college-# SET marks=marks+5;
+UPDATE 10
+college=# select * from students;
+ id |  name  | age | course | marks
+----+--------+-----+--------+-------
+  5 | Vikram |  23 | BBA    |    91
+  6 | Pooja  |  20 | BCA    |    99
+  7 | Kiran  |  22 | MCA    |    83
+  8 | Divya  |  21 | BSc    |   104
+  9 | Sanjay |  19 | BBA    |    78
+ 10 | Meena  |  23 | BCom   |    96
+  4 | Ananya |  19 | BCom   |   104
+  1 | Arjun  |  22 | BCA    |    92
+  2 | Kavya  |  20 | MCA    |    85
+  3 | Rohit  |  21 | BSc    |    94
+(10 rows)
+
+
+college=# select * from students
+college-# order by marks desc
+college-# limit 2;
+ id |  name  | age | course | marks
+----+--------+-----+--------+-------
+  8 | Divya  |  21 | BSc    |   104
+  4 | Ananya |  19 | BCom   |   104
+(2 rows)
+
+
+college=# select count(*)
+college-# from students;
+ count
+-------
+    10
+(1 row)
+
+
+college=# select * from students;
+ id |  name  | age | course | marks
+----+--------+-----+--------+-------
+  5 | Vikram |  23 | BBA    |    91
+  6 | Pooja  |  20 | BCA    |    99
+  7 | Kiran  |  22 | MCA    |    83
+  8 | Divya  |  21 | BSc    |   104
+  9 | Sanjay |  19 | BBA    |    78
+ 10 | Meena  |  23 | BCom   |    96
+  4 | Ananya |  19 | BCom   |   104
+  1 | Arjun  |  22 | BCA    |    92
+  2 | Kavya  |  20 | MCA    |    85
+  3 | Rohit  |  21 | BSc    |    94
+(10 rows)
+
+
+college=# SELECT course,count(*)
+college-# from students
+college-# group by course;
+ course | count
+--------+-------
+ BBA    |     2
+ MCA    |     2
+ BCA    |     2
+ BSc    |     2
+ BCom   |     2
+(5 rows)
+
+
+college=# select course,max(marks)
+college-# from students
+college-# group by course;
+ course | max
+--------+-----
+ BBA    |  91
+ MCA    |  85
+ BCA    |  99
+ BSc    | 104
+ BCom   | 104
+(5 rows)
+
+
+college=# create table student_card(
+college(# card_id serial primary key,
+college(# card_number varchar(50),
+college(# id int unique references students(id));
+CREATE TABLE
+college=#
+college=#
+college=# INSERT INTO student_card(card_number, student_id)
+college-# values
+college-# ('1GD24CS145',1);
+ERROR:  column "student_id" of relation "student_card" does not exist
+LINE 1: INSERT INTO student_card(card_number, student_id)
+                                              ^
+college=# INSERT INTO student_card(card_number, id)
+college-# values
+college-# ('1GD24CS145',1)
+college-# ('1GD24CS144',2);
+ERROR:  syntax error at or near "("
+LINE 4: ('1GD24CS144',2);
+        ^
+college=# INSERT INTO student_card(card_number, id)
+college-# ('1GD24CS145',1),
+college-# ('1GD24CS144',2);
+ERROR:  syntax error at or near "'1GD24CS145'"
+LINE 2: ('1GD24CS145',1),
+         ^
+college=# INSERT INTO student_card(card_number, id)
+college-# values
+college-# ('1GD24CS145',1),
+college-# ('1GD24CS144',2);
+INSERT 0 2
+college=# SELECT * FROM student_card;
+ card_id | card_number | id
+---------+-------------+----
+       1 | 1GD24CS145  |  1
+       2 | 1GD24CS144  |  2
+(2 rows)
+
+
+college=#
+college=#
+college=#
+college=#
+college=#
+college=#
+college=#
+college=#
+college=#
+college=#
+college=# create table departments(
+college(# department_id serial primary key,
+college(# department_name varchar(100));
+CREATE TABLE
+college=#
+college=#
+college=#
+college=#
+college=#
+college=# insert into departments(department_name)
+college-# values
+college-# ('cse'),
+college-# ('mech'),
+college-# ('aiml'),
+college-# ('is');
+INSERT 0 4
+college=# create table new(
+college(# employee_id serial primary key,
+college(# employee_name varchar(100),
+college(# salary int,
+college(# department_id int references departments(department_id);
+college(# );
+ERROR:  syntax error at or near ";"
+LINE 5: department_id int references departments(department_id);
+                                                               ^
+college=# create table employee(
+college(# employee_id serial primary key,
+college(# employee_name varchar(100),
+college(# salary int,
+college(# department_id int references departments(department_id)
+college(# );
+CREATE TABLE
+college=#
+college=#
+college=# insert into employee(employee_name,salary,department_id)
+college-# values
+college-# ('sonu',25000,2),
+college-# ('ramya',30000,2),
+college-# ('revati',35000,3),
+college-# ('rohini',40000,1);
